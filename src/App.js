@@ -1,78 +1,55 @@
-import { useState, useEffect, useRef } from 'react';
-import shortid from 'shortid';
+import { useRef, useEffect } from 'react';
+import { connect } from 'react-redux';
+import * as phonebookActions from './redux/phonebook-actions';
 import Container from './components/Container';
 import Section from './components/Section';
 import MyForm from './components/Form';
 import Filter from './components/Filter';
 import ContactList from './components/ContactList';
 
-const initialContacts = [
-  { id: 'id-1', name: 'Elon Mask', number: '10664888778' },
-  { id: 'id-2', name: 'Lena Kharchenko', number: '380664969795' },
-  { id: 'id-3', name: 'Bill Gates', number: '10662475771' },
-  { id: 'id-4', name: 'Mark Zuckerberg ', number: '10625884318' },
-];
+function App({ contacts, setContacts }) {
+  // const isFirstRender = useRef(true);
 
-function App() {
-  const [contacts, setContacts] = useState(initialContacts);
-  const [filter, setFilter] = useState('');
-  const isFirstRender = useRef(true);
+  // useEffect(() => {
+  //   if (isFirstRender.current) {
+  //     const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
 
-  useEffect(() => {
-    if (isFirstRender.current) {
-      const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
+  //     if (parsedContacts) {
+  //       setContacts(parsedContacts);
+  //     }
 
-      if (parsedContacts) {
-        setContacts(parsedContacts);
-      }
-
-      isFirstRender.current = false;
-      return;
-    }
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
-
-  const addContact = (name, number) => {
-    const contactWithId = {
-      id: shortid.generate(),
-      name,
-      number,
-    };
-
-    setContacts([contactWithId, ...contacts]);
-  };
-
-  const getVisibleContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter),
-    );
-  };
-
-  const deleteContact = contactId => {
-    setContacts(contacts.filter(contact => contact.id !== contactId));
-  };
-
-  const visibleContacts = getVisibleContacts();
+  //     isFirstRender.current = false;
+  //     return;
+  //   }
+  //   localStorage.setItem('contacts', JSON.stringify(contacts));
+  // }, [contacts]);
 
   return (
     <Container>
       <Section title="Phonebook">
-        <MyForm onSubmit={addContact} contacts={contacts} />
+        <MyForm />
       </Section>
       <Section title="Contacts">
-        <Filter
-          value={filter}
-          onChange={e => setFilter(e.currentTarget.value)}
-        />
-        <ContactList
-          contacts={visibleContacts}
-          onDeleteContact={deleteContact}
-        />
+        <Filter />
+        <ContactList />
       </Section>
     </Container>
   );
 }
 
 export default App;
+
+// const mapStateToProps = state => ({
+//   contacts: state.contacts.items,
+// });
+
+// const mapDispatchToProps = dispatch => ({
+//   setContacts: parsedContacts =>
+//     dispatch(
+//       parsedContacts.map(({ name, number }) =>
+//         phonebookActions.addContact(name, number),
+//       ),
+//     ),
+// });
+
+// export default connect(mapStateToProps, mapDispatchToProps)(App);

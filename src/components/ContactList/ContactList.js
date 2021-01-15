@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import * as phonebookActions from '../../redux/phonebook-actions';
 import s from './ContactList.module.css';
 
 function ContactList({ contacts, onDeleteContact }) {
+  console.log(contacts);
   return (
     <ul className={s.list}>
       {contacts.map(({ id, name, number }) => (
@@ -35,4 +38,20 @@ ContactList.propTypes = {
   onDeleteContact: PropTypes.func.isRequired,
 };
 
-export default ContactList;
+const getVisibleContacts = (allContacts, filter) => {
+  const normalizedFilter = filter.toLowerCase();
+
+  return allContacts.filter(({ name }) =>
+    name.toLowerCase().includes(normalizedFilter),
+  );
+};
+
+const mapStateToProps = ({ contacts: { items, filter } }) => ({
+  contacts: getVisibleContacts(items, filter),
+});
+
+const mapDispatchToProps = dispatch => ({
+  onDeleteContact: id => dispatch(phonebookActions.deleteContact(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactList);

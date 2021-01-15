@@ -1,9 +1,9 @@
 import { useState } from 'react';
-
+import { connect } from 'react-redux';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-
 import PropTypes from 'prop-types';
+import * as phonebookActions from '../../redux/phonebook-actions';
 import s from './Form.module.css';
 
 function MyForm({ contacts, onSubmit }) {
@@ -89,4 +89,13 @@ MyForm.propTypes = {
   ),
 };
 
-export default MyForm;
+const mapStateToProps = state => ({
+  contacts: state.contacts.items,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onSubmit: (name, number) =>
+    dispatch(phonebookActions.addContact(name, number)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyForm);
