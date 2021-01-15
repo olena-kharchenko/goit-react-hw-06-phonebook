@@ -7,22 +7,22 @@ import MyForm from './components/Form';
 import Filter from './components/Filter';
 import ContactList from './components/ContactList';
 
-function App({ contacts, setContacts }) {
-  // const isFirstRender = useRef(true);
+function App({ contacts, onFirstRender }) {
+  const isFirstRender = useRef(true);
 
-  // useEffect(() => {
-  //   if (isFirstRender.current) {
-  //     const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
+  useEffect(() => {
+    if (isFirstRender.current) {
+      const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
 
-  //     if (parsedContacts) {
-  //       setContacts(parsedContacts);
-  //     }
+      if (parsedContacts) {
+        onFirstRender(parsedContacts);
+      }
 
-  //     isFirstRender.current = false;
-  //     return;
-  //   }
-  //   localStorage.setItem('contacts', JSON.stringify(contacts));
-  // }, [contacts]);
+      isFirstRender.current = false;
+      return;
+    }
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   return (
     <Container>
@@ -37,19 +37,13 @@ function App({ contacts, setContacts }) {
   );
 }
 
-export default App;
+const mapStateToProps = state => ({
+  contacts: state.contacts.items,
+});
 
-// const mapStateToProps = state => ({
-//   contacts: state.contacts.items,
-// });
+const mapDispatchToProps = dispatch => ({
+  onFirstRender: parsedContacts =>
+    dispatch(phonebookActions.overwriteContacts(parsedContacts)),
+});
 
-// const mapDispatchToProps = dispatch => ({
-//   setContacts: parsedContacts =>
-//     dispatch(
-//       parsedContacts.map(({ name, number }) =>
-//         phonebookActions.addContact(name, number),
-//       ),
-//     ),
-// });
-
-// export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

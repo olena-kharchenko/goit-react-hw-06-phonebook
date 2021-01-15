@@ -16,6 +16,9 @@ const items = (state = initialContacts, { type, payload }) => {
     case types.DELETE:
       return state.filter(({ id }) => id !== payload);
 
+    case types.OVERWRITE:
+      return [...payload];
+
     default:
       return state;
   }
