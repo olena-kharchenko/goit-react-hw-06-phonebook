@@ -1,12 +1,20 @@
 import { useState } from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
+import { getContacts } from '../../redux/phonebook-selectors';
 import * as phonebookActions from '../../redux/phonebook-actions';
 import s from './Form.module.css';
 
-function MyForm({ contacts, onSubmit }) {
+export default function MyForm() {
+  //*** Step 2 ***
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+  const onSubmit = (name, number) =>
+    dispatch(phonebookActions.addContact(name, number));
+
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -78,24 +86,25 @@ function MyForm({ contacts, onSubmit }) {
   );
 }
 
-MyForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    }),
-  ),
-};
+// MyForm.propTypes = {
+//   onSubmit: PropTypes.func.isRequired,
+//   contacts: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       id: PropTypes.string.isRequired,
+//       name: PropTypes.string.isRequired,
+//       number: PropTypes.string.isRequired,
+//     }),
+//   ),
+// };
 
-const mapStateToProps = state => ({
-  contacts: state.contacts.items,
-});
+//*** Step 1 ***
+// const mapStateToProps = state => ({
+//   contacts: state.contacts.items,
+// });
 
-const mapDispatchToProps = dispatch => ({
-  onSubmit: (name, number) =>
-    dispatch(phonebookActions.addContact(name, number)),
-});
+// const mapDispatchToProps = dispatch => ({
+//   onSubmit: (name, number) =>
+//     dispatch(phonebookActions.addContact(name, number)),
+// });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyForm);
+// export default connect(mapStateToProps, mapDispatchToProps)(MyForm);
