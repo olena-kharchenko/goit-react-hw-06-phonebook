@@ -17,7 +17,7 @@ export const deleteContact = contactId => ({
 
 export const overwriteContacts = newContacts => ({
   type: types.OVERWRITE,
-  payload: newContacts[0],
+  payload: newContacts,
 });
 
 export const changeFilter = value => ({
